@@ -98,16 +98,16 @@
 			light2.position.set(1, .5, 0).normalize();
 			scene.add(light2);
 
-			bgTexture = new EXRLoader().load('/examples/textures/cloudy_sky.exr', function (texture) {
+			bgTexture = new EXRLoader().load('examples/textures/cloudy_sky.exr', function (texture) {
 
 				texture.mapping = THREE.EquirectangularReflectionMapping;
 				//scene.background = texture;
 				scene.environment = texture;
 			});
 
-			img1 = new THREE.TextureLoader().load('/examples/textures/cerveau.jpg');
-			img2 = new THREE.TextureLoader().load('/examples/textures/audermars.png');
-			img3 = new THREE.TextureLoader().load('/examples/textures/Dior_fullsize.png');
+			img1 = new THREE.TextureLoader().load('examples/textures/cerveau.jpg');
+			img2 = new THREE.TextureLoader().load('examples/textures/audermars.png');
+			img3 = new THREE.TextureLoader().load('examples/textures/Dior_fullsize.png');
 
 			// Glass Material
 			glassMaterial = new THREE.MeshPhysicalMaterial({
@@ -134,8 +134,8 @@
 
 			// Medaillon
 			new GLTFLoader()
-				.setPath('/examples/models/gltf/')
-				.setDRACOLoader(new DRACOLoader().setDecoderPath('/jsm/libs/draco/gltf/'))
+				.setPath('examples/models/gltf/')
+				.setDRACOLoader(new DRACOLoader().setDecoderPath('jsm/libs/draco/gltf/'))
 				.load('medaillon_WebGL02.glb', function (gltf) {
 
 					displayCase = gltf.scene;

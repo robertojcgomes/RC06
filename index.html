@@ -170,13 +170,13 @@
 			renderer.domElement.addEventListener('mousemove', onMouseMove);
 			renderer.domElement.addEventListener('mousedown', onMouseDown);
 			renderer.domElement.addEventListener('mouseup', onMouseUp);
+			
+			document.addEventListener("touchstart", onTouchStart);
 
 			// Scene GUI
 			const gui = new GUI();
 
 			gui.add(sceneParams, 'rotation').onChange(function (bool) {
-
-
 
 			})
 
@@ -222,6 +222,10 @@
 
 		// Card user rotation control
 		intersectRaycaster = new THREE.Raycaster();
+
+		function onTouchStart(event) {
+			displayCase.scale.set(1.05, 1.05, 1.05);
+		}
 
 		var mouseDown = false,
 			mouseX = 0,

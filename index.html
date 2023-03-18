@@ -171,7 +171,9 @@
 			renderer.domElement.addEventListener('mousedown', onMouseDown);
 			renderer.domElement.addEventListener('mouseup', onMouseUp);
 			
+			document.addEventListener("touchmove", onTouchMove);
 			document.addEventListener("touchstart", onTouchStart);
+			document.addEventListener("touchend", onTouchEnd);
 
 			// Scene GUI
 			const gui = new GUI();
@@ -223,17 +225,39 @@
 		// Card user rotation control
 		intersectRaycaster = new THREE.Raycaster();
 
-		function onTouchStart(event) {
-			displayCase.scale.set(1.05, 1.05, 1.05);
-		}
-
 		var mouseDown = false,
 			mouseX = 0,
 			mouseY = 0;
 
-		function onMouseDown(event) {
+		function onTouchStart(event) {
+			doStartDown();
+		}
 
+		function onTouchEnd(event) {
+			doEndUp();
+		}
+
+		function onTouchMove(event) {
+			doMove();
+		}
+
+
+		function onMouseDown(event) {
 			event.preventDefault();
+			doStartDown();
+		}
+
+		function onMouseUp(event) {
+			event.preventDefault();
+			doEndUp();
+		}
+
+		function onMouseMove(event) {
+			event.preventDefault();
+			doMove();
+		}
+
+		function doStartDown(){
 			mouseDown = true;
 			autoRotate = true;
 			mouseX = event.clientX;
@@ -249,18 +273,13 @@
 			}
 		}
 
-		function onMouseUp(event) {
-
-			event.preventDefault();
+		function doEndUp(){
 			mouseDown = false;
 			autoRotate = false;
 			pickedObj.length = 0;
 		}
 
-		function onMouseMove(event) {
-
-			event.preventDefault();
-
+		function doMove(){
 			pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
 			pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
 

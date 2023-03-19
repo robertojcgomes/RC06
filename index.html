@@ -178,9 +178,7 @@
 			// Scene GUI
 			const gui = new GUI();
 
-			gui.add(sceneParams, 'rotation').onChange(function (bool) {
-
-			})
+			gui.add(sceneParams, 'rotation').onChange(function (bool) {	})
 
 			gui.add(sceneParams, 'scene', ['Clouds', 'Background', 'Glow']).onChange(function (value) {
 
@@ -243,8 +241,6 @@
 			event.preventDefault();
 			mouseDown = true;
 			autoRotate = true;
-			mouseX = event.clientX;
-			mouseY = event.clientY;
 
 			intersectRaycaster.setFromCamera(pointer, camera);
 
@@ -257,7 +253,6 @@
 		}
 
 		function onMouseUp(event) {
-
 			event.preventDefault();
 			mouseDown = false;
 			autoRotate = false;
@@ -268,13 +263,23 @@
 
 			event.preventDefault();
 
-			pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-			pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+			var clientX;
+			var clientY;
 
-			var deltaX = event.clientX - mouseX,
-				deltaY = event.clientY - mouseY;
-			mouseX = event.clientX;
-			mouseY = event.clientY;
+			if(typeof event === "TouchEvent"){
+				clientX = event.touches[0].clientX;
+				clientY = event.touches[0].clientY;
+			} else {
+				clientX = event.clientX;
+				clientY = event.clientY;
+			}
+			pointer.x = (clientX / window.innerWidth) * 2 - 1;
+			pointer.y = - (clientY / window.innerHeight) * 2 + 1;
+
+			var deltaX = clientX - mouseX,
+				deltaY = clientY - mouseY;
+			mouseX = clientX;
+			mouseY = clientY;
 
 			rotateObject(deltaX, deltaY);
 

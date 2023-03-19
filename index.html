@@ -171,9 +171,9 @@
 			renderer.domElement.addEventListener('mousedown', onMouseDown);
 			renderer.domElement.addEventListener('mouseup', onMouseUp);
 			
-			renderer.domElement.addEventListener("touchmove", onMouseMove);
-			renderer.domElement.addEventListener("touchstart", onMouseDown);
-			renderer.domElement.addEventListener("touchend", onMouseUp);
+			renderer.domElement.addEventListener("touchmove", onTouchMove );
+			renderer.domElement.addEventListener("touchstart", onTouchStart );
+			renderer.domElement.addEventListener("touchend", onTouchEnd);
 
 			// Scene GUI
 			const gui = new GUI();
@@ -228,27 +228,51 @@
 			mouseY = 0;
 
 		function onTouchStart(event) {
-		}
-
-		function onTouchEnd(event) {
-		}
-
-		function onTouchMove(event) {
-		}
-
-		function onMouseDown(event) {
-
-			event.preventDefault();
-			mouseDown = true;
-			autoRotate = true;
-
 			intersectRaycaster.setFromCamera(pointer, camera);
-
 			const intersects = intersectRaycaster.intersectObjects(objects);
 
 			if (intersects.length > 0) {
 				console.log("found");
 				pickedObj.push(intersects[0].object);
+
+				mouseDown = true;
+				autoRotate = true;
+				mouseX = event.touches[0].clientX;
+				mouseY = event.touches[0].clientY;
+			}
+		}
+
+		function onTouchEnd(event) {
+			mouseDown = false;
+			autoRotate = false;
+		}
+
+		function onTouchMove(event) {
+			//console.log(event.touches[0].clientX);	event.preventDefault();			
+			pointer.x = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
+			pointer.y = - (event.touches[0].clientY / window.innerHeight) * 2 + 1;
+
+			var deltaX = event.touches[0].clientX - mouseX,
+				deltaY = event.touches[0].clientY - mouseY;
+			mouseX = event.touches[0].clientX;
+			mouseY = event.touches[0].clientY;
+
+			rotateObject(deltaX, deltaY);
+		}
+
+		function onMouseDown(event) {
+			event.preventDefault();
+			intersectRaycaster.setFromCamera(pointer, camera);
+			const intersects = intersectRaycaster.intersectObjects(objects);
+
+			if (intersects.length > 0) {
+				//console.log("found");
+				pickedObj.push(intersects[0].object);
+
+				mouseDown = true;
+				autoRotate = true;
+				mouseX = event.clientX;
+				mouseY = event.clientY;
 			}
 		}
 
@@ -260,26 +284,14 @@
 		}
 
 		function onMouseMove(event) {
+			event.preventDefault();			
+			pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+			pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-			event.preventDefault();
-
-			var clientX;
-			var clientY;
-
-			if(typeof event === "TouchEvent"){
-				clientX = event.touches[0].clientX;
-				clientY = event.touches[0].clientY;
-			} else {
-				clientX = event.clientX;
-				clientY = event.clientY;
-			}
-			pointer.x = (clientX / window.innerWidth) * 2 - 1;
-			pointer.y = - (clientY / window.innerHeight) * 2 + 1;
-
-			var deltaX = clientX - mouseX,
-				deltaY = clientY - mouseY;
-			mouseX = clientX;
-			mouseY = clientY;
+			var deltaX = event.clientX - mouseX,
+				deltaY = event.clientY - mouseY;
+			mouseX = event.clientX;
+			mouseY = event.clientY;
 
 			rotateObject(deltaX, deltaY);
 

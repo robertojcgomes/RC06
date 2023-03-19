@@ -171,9 +171,9 @@
 			renderer.domElement.addEventListener('mousedown', onMouseDown);
 			renderer.domElement.addEventListener('mouseup', onMouseUp);
 			
-			renderer.domElement.addEventListener("touchmove", onTouchMove);
-			renderer.domElement.addEventListener("touchstart", onTouchStart);
-			renderer.domElement.addEventListener("touchend", onTouchEnd);
+			renderer.domElement.addEventListener("touchmove", onMouseMove);
+			renderer.domElement.addEventListener("touchstart", onMouseDown);
+			renderer.domElement.addEventListener("touchend", onMouseUp);
 
 			// Scene GUI
 			const gui = new GUI();
@@ -230,37 +230,17 @@
 			mouseY = 0;
 
 		function onTouchStart(event) {
-			event.preventDefault();
-			doStartDown();
 		}
 
 		function onTouchEnd(event) {
-			event.preventDefault();
-			doEndUp();
 		}
 
 		function onTouchMove(event) {
-			event.preventDefault();
-			doMove();
 		}
-
 
 		function onMouseDown(event) {
-			event.preventDefault();
-			doStartDown();
-		}
 
-		function onMouseUp(event) {
 			event.preventDefault();
-			doEndUp();
-		}
-
-		function onMouseMove(event) {
-			event.preventDefault();
-			doMove();
-		}
-
-		function doStartDown(){
 			mouseDown = true;
 			autoRotate = true;
 			mouseX = event.clientX;
@@ -276,13 +256,18 @@
 			}
 		}
 
-		function doEndUp(){
+		function onMouseUp(event) {
+
+			event.preventDefault();
 			mouseDown = false;
 			autoRotate = false;
 			pickedObj.length = 0;
 		}
 
-		function doMove(){
+		function onMouseMove(event) {
+
+			event.preventDefault();
+
 			pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
 			pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
@@ -317,6 +302,10 @@
 
 				renderer.domElement.style.cursor = '';
 			}
+		}
+
+		function startDown(){
+			
 		}
 
 		function rotateObject(deltaX, deltaY) {

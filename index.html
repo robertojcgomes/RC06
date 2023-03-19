@@ -171,9 +171,9 @@
 			renderer.domElement.addEventListener('mousedown', onMouseDown);
 			renderer.domElement.addEventListener('mouseup', onMouseUp);
 			
-			document.addEventListener("touchmove", onTouchMove);
-			document.addEventListener("touchstart", onTouchStart);
-			document.addEventListener("touchend", onTouchEnd);
+			renderer.domElement.addEventListener("touchmove", onTouchMove);
+			renderer.domElement.addEventListener("touchstart", onTouchStart);
+			renderer.domElement.addEventListener("touchend", onTouchEnd);
 
 			// Scene GUI
 			const gui = new GUI();
@@ -230,14 +230,17 @@
 			mouseY = 0;
 
 		function onTouchStart(event) {
+			event.preventDefault();
 			doStartDown();
 		}
 
 		function onTouchEnd(event) {
+			event.preventDefault();
 			doEndUp();
 		}
 
 		function onTouchMove(event) {
+			event.preventDefault();
 			doMove();
 		}
 

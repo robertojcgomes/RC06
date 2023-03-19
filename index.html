@@ -52,6 +52,9 @@
 		import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
 		import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
+		import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+		import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShader.js';
+
 		let camera, scene, bgTexture, renderer, composer, stats;
 		let displayCase, card, glassMaterial, iridescenceMaterial, img1, img2, img3;
 		let INTERSECTED, intersectRaycaster;
@@ -157,11 +160,14 @@
 				window.innerHeight * renderer.getPixelRatio());
 
 			const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
-			bloomPass.threshold = 0.3;//0.2;
-			bloomPass.strength = 0.3;//0.7;
-			bloomPass.radius = 0.2;//0.2;
+			//bloomPass.threshold = 0.3;//0.2;
+			bloomPass.strength = 0.25;//0.7;
+			//bloomPass.radius = 0.2;//0.2;
+			
+			const gammaCorrection = new ShaderPass(GammaCorrectionShader);
 
 			composer.addPass(new RenderPass(scene, camera));
+			composer.addPass( gammaCorrection );
 			composer.addPass(bloomPass);
 			composer.addPass(smaaPass);
 

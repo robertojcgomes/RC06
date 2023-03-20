@@ -78,6 +78,8 @@
 
 			const container = document.getElementById('container');
 
+			//THREE.ColorManagement.enabled = true;
+
 			renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 			renderer.setPixelRatio(window.devicePixelRatio);
 			renderer.setSize(window.innerWidth, window.innerHeight);
@@ -89,7 +91,7 @@
 
 			//
 			camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 1, 1000);
-			camera.position.z = 4;
+			camera.position.z = 3;
 
 			scene = new THREE.Scene();
 
@@ -109,8 +111,11 @@
 			});
 
 			img1 = new THREE.TextureLoader().load('examples/textures/cerveau.jpg');
+			img1.encoding = THREE.sRGBEncoding;
 			img2 = new THREE.TextureLoader().load('examples/textures/audermars.png');
+			img2.encoding = THREE.sRGBEncoding;
 			img3 = new THREE.TextureLoader().load('examples/textures/Dior_fullsize.png');
+			img3.encoding = THREE.sRGBEncoding;
 
 			// Glass Material
 			glassMaterial = new THREE.MeshPhysicalMaterial({
@@ -146,7 +151,7 @@
 					displayCase.getObjectByName('DisplayCase_3').material = glassMaterial;
 
 					card = displayCase.getObjectByName('DisplayCase_2');
-					card.material.emissiveMap.anisotropy = renderer.capabilities.getMaxAnisotropy();
+					//card.material.emissiveMap.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
 					scene.add(displayCase);
 					objects.push(displayCase);
@@ -220,6 +225,8 @@
 				}
 
 				card.material.emissiveMap.flipY = false;
+				//card.material.emissiveMap.anisotropy = renderer.capabilities.getMaxAnisotropy();
+				//card.material.emissiveMap.generateMipmaps = false;
 
 				render();
 
@@ -320,10 +327,6 @@
 
 				renderer.domElement.style.cursor = '';
 			}
-		}
-
-		function startDown(){
-			
 		}
 
 		function rotateObject(deltaX, deltaY) {

@@ -263,8 +263,14 @@
 			// Scene GUI
 			const gui = new GUI();
 
-			gui.add(sceneParams, 'rotation').onChange(function (bool) {	});
-			gui.add(sceneParams, 'gyro').onChange(function (bool) {	});
+			gui.add(sceneParams, 'rotation').onChange(function (bool) {});
+			gui.add(sceneParams, 'gyro').onChange(function (bool) {
+				if(scene.gyro == true){
+					sensor.start();
+				}else{
+					sensor.stop();
+				}
+			});
 			gui.add(sceneParams, 'minWidth').onChange(function (bool) {
 
 				if (sceneParams.minWidth == false){
@@ -442,11 +448,7 @@
 					console.log("Sensor is not available.");
 				}
 			}
-			if(gyro){
-				sensor.start();
-			}else{
-				sensor.stop();
-			}
+			//sensor.start();
 		}
 
 		function animate() {

@@ -59,7 +59,7 @@
 		let sceneParams;
 		let autoRotate = false;
 		let width, height;
-		let logoParent, clock, mixer1, mixer2, mixer3, mixer4, mixer5, mixer6;
+		let logoParent, logoSymbol, clock, mixer1, mixer2, mixer3, mixer4, mixer5, mixer6;
 		let sensor;
 
 		const mixers = [];
@@ -205,9 +205,10 @@
 				.setDRACOLoader(new DRACOLoader().setDecoderPath('jsm/libs/draco/gltf/'))
 				.load('logo_WebGL01.glb', function (gltf) {
 
-					logoParent = gltf.scene;		
+					logoParent = gltf.scene;
+					logoSymbol = logoParent.getObjectByName('Logo');
 
-					logoParent.getObjectByName('Logo').material = iridescenceGlass;
+					logoSymbol.material = iridescenceGlass;
 
 					logoParent.scale.set(0.2, 0.2, 0.2);
 					logoParent.rotation.y = 55;
@@ -442,7 +443,7 @@
 			const options = { frequency: 60, coordinateSystem };
 			console.log(JSON.stringify(options));
 			sensor = relative ? new RelativeOrientationSensor(options) : new AbsoluteOrientationSensor(options);
-			sensor.onreading = () => logo.quaternion.fromArray(sensor.quaternion).inverse();
+			sensor.onreading = () => logoSymbol.quaternion.fromArray(sensor.quaternion).inverse();
 			sensor.onerror = (event) => {
 				if (event.error.name == 'NotReadableError') {
 					console.log("Sensor is not available.");

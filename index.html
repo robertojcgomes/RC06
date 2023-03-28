@@ -208,6 +208,7 @@
 
 					logoParent = gltf.scene;
 					logoSymbol = logoParent.getObjectByName('Logo');
+					logoParent.add(group);
 					group.add(logoSymbol);
 
 					logoSymbol.material = iridescenceGlass;

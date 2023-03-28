@@ -16,6 +16,7 @@
 	<iframe src="examples/video_bg.html"></iframe>
 
 	<div id="container"></div>
+	<div id="statsContainer"></div>
 
 	<!-- Import maps polyfill -->
 	<!-- Remove this when import maps will be widely supported -->
@@ -107,6 +108,7 @@
 			clock = new THREE.Clock();
 
 			const container = document.getElementById('container');
+			const statsContainer = document.getElementById('statsContainer');
 
 			//THREE.ColorManagement.enabled = true;
 
@@ -120,7 +122,7 @@
 			document.body.appendChild(renderer.domElement);
 
 			stats = new Stats();
-			container.appendChild(stats.dom);
+			statsContainer.appendChild(stats.dom);
 
 			//
 			camera = new THREE.PerspectiveCamera(55, width / height, 1, 1000);

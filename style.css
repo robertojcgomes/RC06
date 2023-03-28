@@ -36,3 +36,10 @@ canvas {
     transform: translate(-50%, -50%);
     margin: 0 auto;
 }
+
+#statsContainer{
+    position: fixed;
+    left: 50px;
+    top: 24px;
+    transform: translate(-50%, -50%);
+}

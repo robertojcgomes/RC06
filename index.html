@@ -59,7 +59,7 @@
 		let sceneParams;
 		let autoRotate = false;
 		let width, height;
-		let group, logoScene, logoParent, logoSymbol, clock, mixer1, mixer2, mixer3, mixer4, mixer5, mixer6;
+		let gyroParent, gyroGroup, logoScene, logoParent, logoSymbol, clock, mixer1, mixer2, mixer3, mixer4, mixer5, mixer6;
 		let sensor;
 
 		const mixers = [];
@@ -200,7 +200,8 @@
 				});
 
 			// Logo
-			group = new THREE.Group();
+			gyroParent = new THREE.Group();
+			gyroGroup = new THREE.Group();
 			logoScene = new GLTFLoader()
 				.setPath('examples/models/gltf/')
 				.setDRACOLoader(new DRACOLoader().setDecoderPath('jsm/libs/draco/gltf/'))
@@ -208,8 +209,12 @@
 
 					logoParent = gltf.scene;
 					logoSymbol = logoParent.getObjectByName('Logo');
-					logoParent.add(group);
-					group.add(logoSymbol);
+					logoParent.add(gyroParent);
+					gyroParent.add(gyroGroup);
+					//gyroGroup.add(logoSymbol);
+					logoParent.add(logoSymbol);
+
+					gyroParent.rotation.x = -90;
 
 					logoSymbol.material = iridescenceGlass;
 
@@ -270,13 +275,12 @@
 			gui.add(sceneParams, 'rotation').onChange(function (bool) {});
 			gui.add(sceneParams, 'gyro').onChange(function (bool) {
 				if(sceneParams.gyro == false){
-					group.remove(logoSymbol);
+					gyroGroup.remove(logoSymbol);
 					logoParent.add(logoSymbol);
-					console.log(group.children.length);
 				}else{
 					logoParent.remove(logoSymbol);
-					group.add(logoSymbol);
-					console.log(group.children.length);
+					gyroGroup.add(logoSymbol);
+					console.log(gyroGroup.children.length);
 				}
 			});
 			gui.add(sceneParams, 'minWidth').onChange(function (bool) {
@@ -450,7 +454,7 @@
 			const options = { frequency: 60, coordinateSystem };
 			console.log(JSON.stringify(options));
 			sensor = relative ? new RelativeOrientationSensor(options) : new AbsoluteOrientationSensor(options);
-			sensor.onreading = () => group.quaternion.fromArray(sensor.quaternion).inverse();
+			sensor.onreading = () => gyroGroup.quaternion.fromArray(sensor.quaternion).inverse();
 			sensor.onerror = (event) => {
 				if (event.error.name == 'NotReadableError') {
 					console.log("Sensor is not available.");

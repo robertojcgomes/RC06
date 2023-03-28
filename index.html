@@ -270,11 +270,9 @@
 			gui.add(sceneParams, 'rotation').onChange(function (bool) {});
 			gui.add(sceneParams, 'gyro').onChange(function (bool) {
 				if(scene.gyro == true){
-					sensor.start();
-					mixer1.clipAction( logoScene.animations[ 0 ] ).stop();
+					logoParent.add(logoSymbol);
 				}else{
-					sensor.stop();
-					mixer1.clipAction( logoScene.animations[ 0 ] ).play();
+					group.add(logoSymbol);
 				}
 			});
 			gui.add(sceneParams, 'minWidth').onChange(function (bool) {

@@ -43,12 +43,21 @@
 		import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 		import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShader.js';
 
+		import {
+              AbsoluteOrientationSensor,
+              RelativeOrientationSensor
+            } from '/sensor-polyfills/motion-sensors.js';
+
 		let camera, scene, bgTexture, renderer, composer, stats;
-		let displayCase, card, glassMaterial, iridescenceMaterial, img1, img2, img3;
+		let displayCase, card, glassMaterial, iridescenceMetal, iridescenceGlass, img1, img2, img3;
 		let INTERSECTED, intersectRaycaster;
 		let sceneParams;
 		let autoRotate = false;
 		let width, height;
+		let logoParent, clock, mixer1, mixer2, mixer3, mixer4, mixer5, mixer6;
+		let tiltX, tiltY, sensor;
+
+		const mixers = [];
 
 		const objects = [];
 		const pickedObj = [];
@@ -61,10 +70,32 @@
 			minWidth: false
 		};
 
+		if (navigator.permissions) {
+			// https://w3c.github.io/orientation-sensor/#model
+			Promise.all([navigator.permissions.query({ name: "accelerometer" }),
+			navigator.permissions.query({ name: "magnetometer" }),
+			navigator.permissions.query({ name: "gyroscope" })])
+				.then(results => {
+					if (results.every(result => result.state === "granted")) {
+						initSensor();
+					} else {
+						console.log("Permission to use sensor was denied.");
+					}
+				}).catch(err => {
+					console.log("Integration with Permissions API is not enabled, still try to start app.");
+					initSensor();
+				});
+		} else {
+			console.log("No Permissions API, still try to start app.");
+			initSensor();
+		}
+
 		init();
 		animate();
 
 		function init() {
+
+			clock = new THREE.Clock();
 
 			const container = document.getElementById('container');
 
@@ -123,15 +154,25 @@
 				thickness: 0.2,
 				iridescence: 0
 			});
-
-			// Iridescence Material
-			iridescenceMaterial = new THREE.MeshPhysicalMaterial({
+			// Iridescence Metal
+			iridescenceMetal = new THREE.MeshPhysicalMaterial({
 				roughness: 0,
 				metalness: 0.9,
 				emissive: 0,
 				iridescence: 1,
 				iridescenceIOR: 1.94,
 				iridescenceThicknessRange: [100, 400]
+			});
+			// Iridescence Glass
+			iridescenceGlass = new THREE.MeshPhysicalMaterial({
+				roughness: 0,
+				metalness: 0.9,
+				emissive: 0,
+				iridescence: 1,
+				iridescenceIOR: 1.94,
+				iridescenceThicknessRange: [100, 400],
+				opacity: 0.9,
+				transparent: true
 			});
 
 			// Medaillon
@@ -141,13 +182,44 @@
 				.load('medaillon_WebGL02.glb', function (gltf) {
 
 					displayCase = gltf.scene;
-					//*displayCase.getObjectByName('DisplayCase_1').material = iridescenceMaterial;
+					//*displayCase.getObjectByName('DisplayCase_1').material = iridescenceMetal;
 					displayCase.getObjectByName('DisplayCase_3').material = glassMaterial;
 
 					card = displayCase.getObjectByName('DisplayCase_2');					
 
-					scene.add(displayCase);
+					//scene.add(displayCase);
 					objects.push(displayCase);
+				});
+
+			// Logo
+			new GLTFLoader()
+				.setPath('examples/models/gltf/')
+				.setDRACOLoader(new DRACOLoader().setDecoderPath('jsm/libs/draco/gltf/'))
+				.load('logo_WebGL01.glb', function (gltf) {
+
+					logoParent = gltf.scene;		
+
+					logoParent.getObjectByName('Logo').material = iridescenceGlass;
+
+					logoParent.scale.set(0.2, 0.2, 0.2);
+					logoParent.rotation.y = 55;
+					scene.add(logoParent);
+
+					mixer1 = new THREE.AnimationMixer( logoParent );
+					mixer2 = new THREE.AnimationMixer( logoParent );
+					mixer3 = new THREE.AnimationMixer( logoParent );
+					mixer4 = new THREE.AnimationMixer( logoParent );
+					mixer5 = new THREE.AnimationMixer( logoParent );
+					mixer6 = new THREE.AnimationMixer( logoParent );
+					
+					mixer1.clipAction( gltf.animations[ 0 ] ).play();
+					mixer2.clipAction( gltf.animations[ 1 ] ).play();
+					mixer3.clipAction( gltf.animations[ 2 ] ).play();
+					mixer4.clipAction( gltf.animations[ 3 ] ).play();
+					mixer5.clipAction( gltf.animations[ 4 ] ).play();
+					mixer6.clipAction( gltf.animations[ 5 ] ).play();
+
+					mixers.push(mixer1,mixer2,mixer3,mixer4,mixer5,mixer6);
 				});
 
 			// Postprocessing
@@ -178,6 +250,8 @@
 			renderer.domElement.addEventListener("touchmove", onTouchMove );
 			renderer.domElement.addEventListener("touchstart", onTouchStart );
 			renderer.domElement.addEventListener("touchend", onTouchEnd);
+
+			//window.addEventListener('deviceorientation', onDeviceOrientation, false);
 
 			// Scene GUI
 			const gui = new GUI();
@@ -232,6 +306,28 @@
 				card.material.emissiveMap.flipY = false;
 				render();
 			});
+
+			/*if (window.DeviceOrientationEvent) {
+				window.addEventListener('deviceorientation', function (eventData) {
+
+					tiltX = Math.round(eventData.gamma * 2);
+
+					tiltY = Math.round(eventData.beta * 2);
+
+					//deviceOrientationHandler(tiltX, tiltY);
+
+				}, false);
+			}
+
+			function deviceOrientationHandler(tiltX, tiltY) {
+
+				//mouseX = tiltX;
+				//mouseY = tiltY;
+				
+				logoParent.rotation.x = tiltX;
+				logoParent.rotation.y = tiltY;
+				console.log(tiltX);
+			}*/
 		}
 
 		// Card user rotation control
@@ -343,9 +439,33 @@
 			composer.setSize(width, height);
 		}
 
+		/*function onDeviceOrientation() {
+			tiltX = Math.round(eventData.gamma * 2);
+			tiltY = Math.round(eventData.beta * 2);
+			logoParent.rotation.x = tiltX;
+			logoParent.rotation.y = tiltY;
+			console.log(tiltX);
+		}*/
+
+		function initSensor() {
+                const options = { frequency: 60, coordinateSystem };
+                console.log(JSON.stringify(options));
+                sensor = relative ? new RelativeOrientationSensor(options) : new AbsoluteOrientationSensor(options);
+                sensor.onreading = () => logoParent.quaternion.fromArray(sensor.quaternion).inverse();
+                sensor.onerror = (event) => {
+                  if (event.error.name == 'NotReadableError') {
+                    console.log("Sensor is not available.");
+                  }
+                }
+                sensor.start();
+            }
+
 		function animate() {
 
 			requestAnimationFrame(animate);
+			
+			const delta = clock.getDelta();
+			for ( const mixer of mixers ) mixer.update( delta );
 
 			stats.begin();
 

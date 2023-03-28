@@ -71,8 +71,10 @@
 		sceneParams = {
 			scene: 'Clouds',
 			texture: 'Cerveau',
+			gyro: false,
 			rotation: true,
-			minWidth: false
+			minWidth: false,
+			logo: false
 		};
 
 		init();
@@ -192,7 +194,8 @@
 
 					card = displayCase.getObjectByName('DisplayCase_2');					
 
-					//scene.add(displayCase);
+					//displayCase.visible = false;
+					scene.add(displayCase);
 					objects.push(displayCase);
 				});
 
@@ -208,6 +211,7 @@
 
 					logoParent.scale.set(0.2, 0.2, 0.2);
 					logoParent.rotation.y = 55;
+					logoParent.visible = false;
 					scene.add(logoParent);
 
 					mixer1 = new THREE.AnimationMixer( logoParent );
@@ -260,6 +264,7 @@
 			const gui = new GUI();
 
 			gui.add(sceneParams, 'rotation').onChange(function (bool) {	});
+			gui.add(sceneParams, 'gyro').onChange(function (bool) {	});
 			gui.add(sceneParams, 'minWidth').onChange(function (bool) {
 
 				if (sceneParams.minWidth == false){
@@ -272,7 +277,14 @@
 					renderer.setSize(width, height);
 					composer.setSize(width, height);
 			});
-
+			gui.add(sceneParams, 'logo').onChange(function (bool) {
+				if (sceneParams.logo == false){
+					displayCase.position.y = 0;
+				}else{
+					displayCase.position.y = -1000;
+				}
+				logoParent.visible = sceneParams.logo;
+			});
 			gui.add(sceneParams, 'scene', ['Clouds', 'Background', 'Glow']).onChange(function (value) {
 
 				switch (value) {
@@ -430,7 +442,11 @@
 					console.log("Sensor is not available.");
 				}
 			}
-			sensor.start();
+			if(gyro){
+				sensor.start();
+			}else{
+				sensor.stop();
+			}
 		}
 
 		function animate() {

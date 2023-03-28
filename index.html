@@ -70,7 +70,8 @@
 
 			//THREE.ColorManagement.enabled = true;
 
-			width = window.innerWidth;
+			width = 340; //the smaller the rendering size the sharper the texture is.
+			//width = window.innerWidth;
 			height = window.innerHeight;
 
 			renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -126,7 +127,7 @@
 			// Iridescence Material
 			iridescenceMaterial = new THREE.MeshPhysicalMaterial({
 				roughness: 0,
-				metalness: 1,
+				metalness: 0.9,
 				emissive: 0,
 				iridescence: 1,
 				iridescenceIOR: 1.94,
@@ -140,7 +141,7 @@
 				.load('medaillon_WebGL02.glb', function (gltf) {
 
 					displayCase = gltf.scene;
-					//displayCase.getObjectByName('DisplayCase_1').material = iridescenceMaterial;
+					//*displayCase.getObjectByName('DisplayCase_1').material = iridescenceMaterial;
 					displayCase.getObjectByName('DisplayCase_3').material = glassMaterial;
 
 					card = displayCase.getObjectByName('DisplayCase_2');					
@@ -370,11 +371,6 @@
 					break;
 			}
 		}
-
-
-
 	</script>
-
 </body>
-
 </html>

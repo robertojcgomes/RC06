@@ -269,9 +269,11 @@
 
 			gui.add(sceneParams, 'rotation').onChange(function (bool) {});
 			gui.add(sceneParams, 'gyro').onChange(function (bool) {
-				if(scene.gyro == true){
+				if(scene.gyro == false){
+					group.remove(logoSymbol);
 					logoParent.add(logoSymbol);
 				}else{
+					logoParent.remove(logoSymbol);
 					group.add(logoSymbol);
 				}
 			});

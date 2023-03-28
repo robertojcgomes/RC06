@@ -269,12 +269,14 @@
 
 			gui.add(sceneParams, 'rotation').onChange(function (bool) {});
 			gui.add(sceneParams, 'gyro').onChange(function (bool) {
-				if(scene.gyro == false){
+				if(sceneParams.gyro == false){
 					group.remove(logoSymbol);
 					logoParent.add(logoSymbol);
+					console.log(group.children.length);
 				}else{
 					logoParent.remove(logoSymbol);
 					group.add(logoSymbol);
+					console.log(group.children.length);
 				}
 			});
 			gui.add(sceneParams, 'minWidth').onChange(function (bool) {

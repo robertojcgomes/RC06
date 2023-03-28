@@ -72,6 +72,7 @@
 			scene: 'Clouds',
 			texture: 'Cerveau',
 			gyro: false,
+			gyroRotation: 0,
 			rotation: true,
 			minWidth: false,
 			logo: false
@@ -214,7 +215,7 @@
 					//gyroGroup.add(logoSymbol);
 					logoParent.add(logoSymbol);
 
-					gyroParent.rotation.x = -135;
+					gyroParent.rotation.x = -1.57;
 
 					logoSymbol.material = iridescenceGlass;
 
@@ -283,6 +284,12 @@
 					console.log(gyroGroup.children.length);
 				}
 			});
+			gui.add( sceneParams, 'gyroRotation', -6.28319, 6.28319, 0.001 )
+					.onChange( function () {
+
+						gyroParent.rotation.x = sceneParams.gyroRotation;
+
+					} );
 			gui.add(sceneParams, 'minWidth').onChange(function (bool) {
 
 				if (sceneParams.minWidth == false){

@@ -25,8 +25,7 @@
 		  {
 			"imports": {
 			  "three": "https://unpkg.com/three/build/three.module.js",
-			  "three/addons/": "https://unpkg.com/three/examples/jsm/",
-			  "gyro": "./build/motion-sensors.js"
+			  "three/addons/": "https://unpkg.com/three/examples/jsm/"
 			}
 		  }
 		</script>
@@ -48,7 +47,11 @@
 		import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 		import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShader.js';
 
-		//import { AbsoluteOrientationSensor, RelativeOrientationSensor } from './build/motion-sensors.js';
+		import { AbsoluteOrientationSensor, RelativeOrientationSensor } from './build/motion-sensors.js';
+
+		const params = new URLSearchParams(new URL(window.location.href).search.slice(1));
+        const relative = !!Number(params.get("relative"));
+	    const coordinateSystem = params.get("coord");
 
 		let camera, scene, bgTexture, renderer, composer, stats;
 		let displayCase, card, glassMaterial, iridescenceMetal, iridescenceGlass, img1, img2, img3;

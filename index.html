@@ -194,7 +194,7 @@
 
 					card = displayCase.getObjectByName('DisplayCase_2');					
 
-					//displayCase.visible = false;
+					displayCase.visible = false;
 					scene.add(displayCase);
 					objects.push(displayCase);
 				});
@@ -211,7 +211,7 @@
 
 					logoParent.scale.set(0.2, 0.2, 0.2);
 					logoParent.rotation.y = 55;
-					logoParent.visible = false;
+					logoParent.visible = true;
 					scene.add(logoParent);
 
 					mixer1 = new THREE.AnimationMixer( logoParent );

@@ -72,7 +72,7 @@
 			scene: 'Clouds',
 			texture: 'Cerveau',
 			gyro: false,
-			gyroRotation: 0,
+			gyroRotation: -1.57,
 			rotation: true,
 			minWidth: false,
 			logo: false
@@ -195,7 +195,7 @@
 
 					card = displayCase.getObjectByName('DisplayCase_2');					
 
-					displayCase.visible = false;
+					//displayCase.visible = false;
 					scene.add(displayCase);
 					objects.push(displayCase);
 				});
@@ -221,7 +221,7 @@
 
 					logoParent.scale.set(0.2, 0.2, 0.2);
 					logoParent.rotation.y = 55;
-					logoParent.visible = true;
+					logoParent.visible = false;
 					scene.add(logoParent);
 
 					mixer1 = new THREE.AnimationMixer( logoParent );
@@ -281,7 +281,6 @@
 				}else{
 					logoParent.remove(logoSymbol);
 					gyroGroup.add(logoSymbol);
-					console.log(gyroGroup.children.length);
 				}
 			});
 			gui.add( sceneParams, 'gyroRotation', -6.28319, 6.28319, 0.001 )

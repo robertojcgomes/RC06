@@ -99,8 +99,8 @@
 
 			//THREE.ColorManagement.enabled = true;
 
-			width = 340; //the smaller the rendering size the sharper the texture is.
-			//width = window.innerWidth;
+			//width = 340; //the smaller the rendering size the sharper the texture is.
+			width = window.innerWidth;
 			height = window.innerHeight;
 
 			renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -258,7 +258,7 @@
 				if (sceneParams.minWidth == false){
 					width = window.innerWidth;
 				}else{
-					width = 400;
+					width = 340;
 				}
 					camera.aspect = width / height;
 					camera.updateProjectionMatrix();
@@ -457,6 +457,14 @@
 					break;
 			}
 		}
+
+		let log = console.log;
+		console.log = (message, ...rest) => {
+			const div = document.querySelector('#console');
+			div.innerText = message;
+			log.call(console, message, ...rest);
+		}
 	</script>
+    <div id="console"></div>
 </body>
 </html>

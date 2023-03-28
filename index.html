@@ -268,6 +268,7 @@
 			gui.add(sceneParams, 'gyro').onChange(function (bool) {
 				if(scene.gyro == true){
 					sensor.start();
+					
 					mixer1.clipAction( logoScene.animations[ 0 ] ).stop();
 				}else{
 					sensor.stop();

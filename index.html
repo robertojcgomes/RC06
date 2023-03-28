@@ -276,21 +276,6 @@
 			const gui = new GUI();
 
 			gui.add(sceneParams, 'rotation').onChange(function (bool) {});
-			gui.add(sceneParams, 'gyro').onChange(function (bool) {
-				if(sceneParams.gyro == false){
-					gyroGroup.remove(logoSymbol);
-					logoParent.add(logoSymbol);
-				}else{
-					logoParent.remove(logoSymbol);
-					gyroGroup.add(logoSymbol);
-				}
-			});
-			gui.add( sceneParams, 'gyroRotation', -6.28319, 6.28319, 0.001 )
-					.onChange( function () {
-
-						gyroParent.rotation.x = sceneParams.gyroRotation;
-
-					} );
 			gui.add(sceneParams, 'minWidth').onChange(function (bool) {
 
 				if (sceneParams.minWidth == false){
@@ -303,7 +288,11 @@
 					renderer.setSize(width, height);
 					composer.setSize(width, height);
 			});
-			gui.add(sceneParams, 'logo').onChange(function (bool) {
+
+			const logoFolder = gui.addFolder('RC Logo');
+
+
+			logoFolder.add(sceneParams, 'logo').onChange(function (bool) {
 				if (sceneParams.logo == false){
 					displayCase.position.y = 0;
 				}else{
@@ -311,7 +300,22 @@
 				}
 				logoParent.visible = sceneParams.logo;
 			});
-			gui.add(sceneParams, 'scene', ['Clouds', 'Background', 'Glow']).onChange(function (value) {
+			logoFolder.add(sceneParams, 'gyro').onChange(function (bool) {
+				if(sceneParams.gyro == false){
+					gyroGroup.remove(logoSymbol);
+					logoParent.add(logoSymbol);
+				}else{
+					logoParent.remove(logoSymbol);
+					gyroGroup.add(logoSymbol);
+				}
+			});
+			logoFolder.add( sceneParams, 'gyroRotation', -6.28319, 6.28319, 0.001 )
+					.onChange( function () {
+
+						gyroParent.rotation.x = sceneParams.gyroRotation;
+
+					} );
+			logoFolder.add(sceneParams, 'scene', ['Clouds', 'Background', 'Glow']).onChange(function (value) {
 
 				switch (value) {
 					case 'Clouds':
@@ -326,7 +330,6 @@
 				}
 				render();
 			});
-			gui.close();
 
 			const folder = gui.addFolder('Card Image');
 
@@ -348,6 +351,10 @@
 				card.material.emissiveMap.flipY = false;
 				render();
 			});
+
+			logoFolder.close();
+			folder.close();
+			gui.close();
 		}
 
 		// Card user rotation control

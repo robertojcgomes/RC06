@@ -60,7 +60,9 @@
 		let sceneParams;
 		let autoRotate = false;
 		let width, height;
-		let gyroParent, gyroGroup, logoScene, logoParent, logoSymbol, clock, mixer1, mixer2, mixer3, mixer4, mixer5, mixer6;
+		let gyroParent, gyroGroup,
+			logoScene, logoParent, logoSymbol,
+			clock, mixer1, mixer2, mixer3, mixer4, mixer5, mixer6;
 		let sensor;
 
 		const mixers = [];
@@ -82,7 +84,7 @@
 		init();
 
 		if (navigator.permissions) {
-			// https://w3c.github.io/orientation-sensor/#model
+			//https://w3c.github.io/orientation-sensor/#model
 			Promise.all([navigator.permissions.query({ name: "accelerometer" }),
 							navigator.permissions.query({ name: "magnetometer" }),
 							navigator.permissions.query({ name: "gyroscope" })])
@@ -181,8 +183,9 @@
 				iridescence: 1,
 				iridescenceIOR: 1.94,
 				iridescenceThicknessRange: [100, 400],
-				opacity: 0.9,
-				transparent: true
+				opacity: 0.8,
+				transparent: true,
+				forceSinglePass: true
 			});
 
 			// Medaillon
@@ -288,34 +291,7 @@
 					renderer.setSize(width, height);
 					composer.setSize(width, height);
 			});
-
-			const logoFolder = gui.addFolder('RC Logo');
-
-
-			logoFolder.add(sceneParams, 'logo').onChange(function (bool) {
-				if (sceneParams.logo == false){
-					displayCase.position.y = 0;
-				}else{
-					displayCase.position.y = -1000;
-				}
-				logoParent.visible = sceneParams.logo;
-			});
-			logoFolder.add(sceneParams, 'gyro').onChange(function (bool) {
-				if(sceneParams.gyro == false){
-					gyroGroup.remove(logoSymbol);
-					logoParent.add(logoSymbol);
-				}else{
-					logoParent.remove(logoSymbol);
-					gyroGroup.add(logoSymbol);
-				}
-			});
-			logoFolder.add( sceneParams, 'gyroRotation', -6.28319, 6.28319, 0.001 )
-					.onChange( function () {
-
-						gyroParent.rotation.x = sceneParams.gyroRotation;
-
-					} );
-			logoFolder.add(sceneParams, 'scene', ['Clouds', 'Background', 'Glow']).onChange(function (value) {
+			gui.add(sceneParams, 'scene', ['Clouds', 'Background', 'Glow']).onChange(function (value) {
 
 				switch (value) {
 					case 'Clouds':
@@ -351,6 +327,33 @@
 				card.material.emissiveMap.flipY = false;
 				render();
 			});
+
+			const logoFolder = gui.addFolder('RC Logo');
+
+
+			logoFolder.add(sceneParams, 'logo').onChange(function (bool) {
+				if (sceneParams.logo == false){
+					displayCase.position.y = 0;
+				}else{
+					displayCase.position.y = -1000;
+				}
+				logoParent.visible = sceneParams.logo;
+			});
+			logoFolder.add(sceneParams, 'gyro').onChange(function (bool) {
+				if(sceneParams.gyro == false){
+					gyroGroup.remove(logoSymbol);
+					logoParent.add(logoSymbol);
+				}else{
+					logoParent.remove(logoSymbol);
+					gyroGroup.add(logoSymbol);
+				}
+			});
+			logoFolder.add( sceneParams, 'gyroRotation', -6.28319, 6.28319, 0.001 )
+					.onChange( function () {
+
+						gyroParent.rotation.x = sceneParams.gyroRotation;
+
+					} );
 
 			logoFolder.close();
 			folder.close();

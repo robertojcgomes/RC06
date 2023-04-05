@@ -161,7 +161,8 @@
 
 			// Glass Material
 			glassMaterial = new THREE.MeshPhysicalMaterial({
-				envMap: scene.environment,
+				//envMap: scene.environment,
+				envMap: logoEnvMap,
 				transparent: true,
 				color: 0xffffff,
 				transmission: 1,
@@ -173,6 +174,7 @@
 			});
 			// Iridescence Metal
 			iridescenceMetal = new THREE.MeshPhysicalMaterial({
+				envMap: logoEnvMap,
 				roughness: 0,
 				metalness: 0.9,
 				emissive: 0,
@@ -205,7 +207,7 @@
 				.load('medaillon_WebGL02.glb', function (gltf) {
 
 					displayCase = gltf.scene;
-					//*displayCase.getObjectByName('DisplayCase_1').material = iridescenceMetal;
+					//displayCase.getObjectByName('DisplayCase_1').material = iridescenceMetal;
 					displayCase.getObjectByName('DisplayCase_3').material = glassMaterial;
 
 					card = displayCase.getObjectByName('DisplayCase_2');					
@@ -221,7 +223,7 @@
 			logoScene = new GLTFLoader()
 				.setPath('examples/models/gltf/')
 				.setDRACOLoader(new DRACOLoader().setDecoderPath('jsm/libs/draco/gltf/'))
-				.load('logo_WebGL01.glb', function (gltf) {
+				.load('logo_WebGL02.glb', function (gltf) {
 
 					logoParent = gltf.scene;
 					logoSymbol = logoParent.getObjectByName('Logo');
@@ -233,8 +235,6 @@
 					gyroParent.rotation.x = -1.57;
 
 					logoSymbol.material = iridescenceGlass;
-					//logoSymbol.material = cubeMaterial3;
-					//logoSymbol.material = cubeMaterial4;
 
 					logoParent.scale.set(0.2, 0.2, 0.2);
 					logoParent.rotation.y = 55;
@@ -254,6 +254,8 @@
 					mixer4.clipAction( gltf.animations[ 3 ] ).play();
 					mixer5.clipAction( gltf.animations[ 4 ] ).play();
 					mixer6.clipAction( gltf.animations[ 5 ] ).play();
+
+					gltf.animations[ 0 ].setLoop=THREE.LoopRepeat;
 
 					mixers.push(mixer1,mixer2,mixer3,mixer4,mixer5,mixer6);
 				});
@@ -520,7 +522,7 @@
 				case 'Background':
 					renderer.render(scene, camera);
 					break;
-				case 'Glow':
+				case 'Bloom':
 					composer.render();
 					break;
 			}

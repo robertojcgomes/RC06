@@ -15,8 +15,9 @@
 <body>
 	<iframe src="examples/video_bg.html"></iframe>
 
-	<div id="container"></div>
+	
 	<div id="statsContainer"></div>
+	<div id="container"></div>
 
 	<!-- Import maps polyfill -->
 	<!-- Remove this when import maps will be widely supported -->
@@ -54,7 +55,7 @@
         const relative = !!Number(params.get("relative"));
 	    const coordinateSystem = params.get("coord");
 
-		let camera, scene, bgTexture, renderer, composer, stats;
+		let camera, scene, bgTexture, logoEnvMap, renderer, composer, stats;
 		let displayCase, card, glassMaterial, iridescenceMetal, iridescenceGlass, img1, img2, img3;
 		let INTERSECTED, intersectRaycaster;
 		let sceneParams;
@@ -147,6 +148,10 @@
 				scene.environment = texture;
 			});
 
+			logoEnvMap = new EXRLoader().load('examples/textures/cloudy_sky3.exr', function (texture) {
+			texture.mapping = THREE.EquirectangularReflectionMapping;
+			});
+
 			img1 = new THREE.TextureLoader().load('examples/textures/cerveau.jpg');
 			img1.encoding = THREE.sRGBEncoding;
 			img2 = new THREE.TextureLoader().load('examples/textures/audermars.png');
@@ -177,15 +182,20 @@
 			});
 			// Iridescence Glass
 			iridescenceGlass = new THREE.MeshPhysicalMaterial({
+				envMap: logoEnvMap,				
+				reflectivity: 1.2,
 				roughness: 0,
-				metalness: 0.9,
-				emissive: 0,
+				metalness: 1,
 				iridescence: 1,
-				iridescenceIOR: 1.94,
-				iridescenceThicknessRange: [100, 400],
-				opacity: 0.8,
+				transmission: .7,
+				thickness: 100,
+				opacity: 1,
 				transparent: true,
-				forceSinglePass: true
+				side: THREE.DoubleSide,
+				emissive: 1,
+				iridescenceIOR: 1.94,
+				iridescenceThicknessRange: [100, 100],
+				//forceSinglePass: true
 			});
 
 			// Medaillon
@@ -200,7 +210,7 @@
 
 					card = displayCase.getObjectByName('DisplayCase_2');					
 
-					//displayCase.visible = false;
+					displayCase.visible = false;
 					scene.add(displayCase);
 					objects.push(displayCase);
 				});
@@ -223,10 +233,12 @@
 					gyroParent.rotation.x = -1.57;
 
 					logoSymbol.material = iridescenceGlass;
+					//logoSymbol.material = cubeMaterial3;
+					//logoSymbol.material = cubeMaterial4;
 
 					logoParent.scale.set(0.2, 0.2, 0.2);
 					logoParent.rotation.y = 55;
-					logoParent.visible = false;
+					logoParent.visible = true;
 					scene.add(logoParent);
 
 					mixer1 = new THREE.AnimationMixer( logoParent );
@@ -291,7 +303,7 @@
 					renderer.setSize(width, height);
 					composer.setSize(width, height);
 			});
-			gui.add(sceneParams, 'scene', ['Clouds', 'Background', 'Glow']).onChange(function (value) {
+			gui.add(sceneParams, 'scene', ['Clouds', 'Background', 'Bloom']).onChange(function (value) {
 
 				switch (value) {
 					case 'Clouds':
@@ -300,7 +312,7 @@
 					case 'Background':
 						scene.background = bgTexture;
 						break;
-					case 'Glow':
+					case 'Bloom':
 						scene.background = bgTexture;
 						break;
 				}

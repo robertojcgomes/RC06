@@ -174,9 +174,11 @@
 			});
 			// Iridescence Metal
 			iridescenceMetal = new THREE.MeshPhysicalMaterial({
-				envMap: logoEnvMap,
-				roughness: 0,
-				metalness: 0.9,
+				envMap: scene.environment,
+				//envMap: logoEnvMap,			
+				//reflectivity: 1.2,
+				roughness: 0.1,
+				metalness: 0.98,
 				emissive: 0,
 				iridescence: 1,
 				iridescenceIOR: 1.94,
@@ -196,7 +198,7 @@
 				side: THREE.DoubleSide,
 				emissive: 1,
 				iridescenceIOR: 1.94,
-				iridescenceThicknessRange: [100, 100],
+				iridescenceThicknessRange: [100, 400],
 				//forceSinglePass: true
 			});
 
@@ -207,8 +209,8 @@
 				.load('medaillon_WebGL02.glb', function (gltf) {
 
 					displayCase = gltf.scene;
-					//displayCase.getObjectByName('DisplayCase_1').material = iridescenceMetal;
-					displayCase.getObjectByName('DisplayCase_3').material = glassMaterial;
+					displayCase.getObjectByName('DisplayCase_1').material = iridescenceMetal;
+					//displayCase.getObjectByName('DisplayCase_3').material = glassMaterial;
 
 					card = displayCase.getObjectByName('DisplayCase_2');					
 

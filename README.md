@@ -29,4 +29,6 @@ In the RC Logo tab:
 #
 [Page live preview here.](https://robertojcgomes.github.io/RC06/)
 #
+[Gyroscope access copied from Intel's generic sensor demos.](https://github.com/intel/generic-sensor-demos)
+#
 [Temple Caché](https://www.templecache.com/)  |  [Réalité Caché](https://realitecachee.com/)  |  [@realite.cachee](https://www.instagram.com/realite.cachee/)
